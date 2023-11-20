@@ -4,7 +4,16 @@
 
 package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.controller.LinearQuadraticRegulator;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -12,38 +21,37 @@ public abstract class ElevatorSubsystem extends SubsystemBase {
 
         protected static class Constants {
                 protected static final double dtSeconds = 0.020;
-                // TODO: create an int called deviceId and set equal to 16
-                // TODO: create a double called grearing and set equal to 16
-                // TODO: create a double called drumRadiusMeters and set to
-                // Units.inchesToMeters(0.88)
-                // TODO: create a double called kG and set equal to 0.26374
-                // TODO: create a double called kV and set equal to 14.346
-                // TODO: create a double called kA and set equal to 0.20482
-                // TODO: create a double called maxPositionErrorMeters and set equal to 0.125
-                // TODO: create a double called maxVelocityErrorMetersPerSec and set equal to
-                // 24.178
-                // TODO: create a LinearSystem<N2, N1, N1> called positionPlant and initialize
-                // with LinearSystemId.identifyPositionSystem
-                // TODO: create a Vector<N2> called positionQelms and initialize with
-                // VecBuilder.fill(maxPositionErrorMeters, maxVelocityErrorMetersPerSec)
-                // TODO: create a Vector<N1> called positionRelms and initialize with
-                // VecBuilder.fill(RobotController.getBatteryVoltage())
-                // TODO: create a LinearQuadraticRegular<N2, N1, N1> called positionController
-                // and initialize with appropriate values
-                // TODO: create a LinearSystem<N1, N1, N1> called velocityPlant and initialize
-                // with LinearSystemId.identifyVelocitySystem
-                // TODO: create a Vector<N1> called velocityQelsm and initialize with
-                // VecBuilder.fill(maxVelocityErrorMetersPerSec)
+                int devideId = 16;
+                double grearing = 16;
+                double drumRadiusMeters = Units.inchesToMeters(0.88);
+                double kG = 0.26374;
+                double kV = 14.346;
+                double kA = 0.20482; 
+                double maxPositionErrorMeters = 0.125;
+                double maxVelocityErrorMetersPerSec = 24.178;
+
+                LinearSystem<N2, N1, N1> positionPlant = LinearSystemId.identifyPositionSystem(kV, kA);
+                Vector<N2> positionQelms = VecBuilder.fill(maxPositionErrorMeters, maxVelocityErrorMetersPerSec);
+                Vector<N1> positionRelms = VecBuilder.fill(RobotController.getBatteryVoltage());
+                LinearQuadraticRegulator<N2, N1, N1> positionController = new LinearQuadraticRegulator<>(
+                        positionPlant, 
+                        positionQelms, 
+                        positionRelms, 
+                        dtSeconds);
+                LinearSystem<N1, N1, N1> velocityPlant = LinearSystemId.identifyVelocitySystem(kV, kA);
+                Vector<N1> velocityQelsm = VecBuilder.fill(maxVelocityErrorMetersPerSec);
+                LinearQuadraticRegular<N1, N1, N1> velocityController = LinearQuadraticRegulator<N1, N1, N1> velocityController;
+
+                double kPPosition = positionCOntroller.getK().get(0,0);
+                double kIPosition = 0.0;
+                double kDPosition = positionController.getK.get(0,1);
+                double kPVelocity = velocityController.getK().get(0,0);
+                
+
                 // TODO: create a LinearQuadraticRegular<N1, N1, N1> called velocityController
                 // and initialize with LinearQuadraticRegulator<N1, N1, N1> velocityController
                 // with appropriate constants
-                // TODO: create a double called kPPosition and initialize to
-                // positionController.getK().get(0, 0)
-                // TODO: create a double called kIPosition and set equal to 0.0
-                // TODO: create a double called kDPosition and initialize to
-                // positionController.getK().get(0, 1)
-                // TODO: create a double called kPVelocity and initialize to
-                // velocityController.getK().get(0, 0)
+
                 // TODO: create a double called kIVelocity and set equal to 0.0
                 // TODO: create a double called kDVelocity and set equal to 0.0
                 // TODO: create a double called tolerance and set equal to 0.0239 * pi *

@@ -40,7 +40,7 @@ public abstract class ElevatorSubsystem extends SubsystemBase {
                         dtSeconds);
                 LinearSystem<N1, N1, N1> velocityPlant = LinearSystemId.identifyVelocitySystem(kV, kA);
                 Vector<N1> velocityQelsm = VecBuilder.fill(maxVelocityErrorMetersPerSec);
-                LinearQuadraticRegular<N1, N1, N1> velocityController = LinearQuadraticRegulator<N1, N1, N1> velocityController;
+                LinearQuadraticRegulator<N1, N1, N1> velocityController = LinearQuadraticRegulator<N1, N1, N1> velocityController;
 
                 double kPPosition = positionCOntroller.getK().get(0,0);
                 double kIPosition = 0.0;
